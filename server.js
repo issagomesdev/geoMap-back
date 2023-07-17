@@ -1,12 +1,14 @@
 const express = require('express');
 const turf = require('@turf/turf');
 const app = express();
+const path = require('path');
 const cors = require('cors');
 app.use(cors());
 const bodyParser = require('body-parser');
 const port = 3000;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(__dirname));
 
 app.post('/areas', (req, res) => {
 
@@ -42,6 +44,12 @@ app.post('/lots', (req, res) => {
 
   //console.log(lotesCoordenadas.length);
   res.json(lotesCoordenadas);
+
+});
+
+app.post('/image', (req, res) => {
+
+  res.send(`${req.protocol}://${req.get('host')}/image.jpg`);
 
 });
 
