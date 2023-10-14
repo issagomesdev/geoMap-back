@@ -15,18 +15,17 @@ app.post('/areas', (req, res) => {
   const polygon = req.body.polygon
   
   const originalPolygon = turf.polygon([polygon]);
-  const subPolygons = turf.hexGrid(turf.bbox(originalPolygon), 0.150, { units: 'kilometers' });
+  const subPolygons = turf.hexGrid(turf.bbox(originalPolygon), req.body.spacing, { units: 'kilometers' });
 
   const validSubPolygons = subPolygons.features.filter(subPolygon => {
     const isWithinPolygon = turf.booleanWithin(subPolygon, originalPolygon);
     return isWithinPolygon && subPolygon.geometry.coordinates[0].length >= 4;
   });
-
-  //console.log(validSubPolygons.length);   
+ 
   res.json(validSubPolygons.map(item => item.geometry.coordinates[0]));
 });
 
-app.post('/lots', (req, res) => {
+app.post('/lotes', (req, res) => {
   const polygon = req.body.polygon
   //console.log(req.body)
   polygon.push(polygon[0])
@@ -41,8 +40,7 @@ app.post('/lots', (req, res) => {
     const coordinates = turf.getCoords(lote.geometry);
     return coordinates[0][0];
   });
-
-  //console.log(lotesCoordenadas.length);
+  
   res.json(lotesCoordenadas);
 
 });
